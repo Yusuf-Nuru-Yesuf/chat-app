@@ -36,7 +36,7 @@ io.on('connection', socket => {
     socket.broadcast.to(user.room).emit('display message', builMsg(ADMIN, `${user.name} has joined the room`))
 
     // update users in room
-    io.to(user.room).emit('display users', { users: getUsersInRoom(user.room)})
+    io.to(user.room).emit('display users', { users: getUsersInRoom(user.room) })
 
     // update all active rooms
     io.emit('display rooms', { rooms: getAllActiveRooms() })
@@ -53,7 +53,19 @@ io.on('connection', socket => {
 
   // When user disconnects - to all others
   socket.on('disconnect', () => {
-    socket.broadcast.emit('display message', `User ${socket.id} diconnected`)
+    const user = getUser(socket.id)
+    userLeavesApp(socket.id)
+    
+    if(user) {
+      io.to(user.room).emit('display message', builMsg(ADMIN, `${user.name} has left the room`))
+
+      io.to(user.room).emit('display users', { users: getUsersInRoom(user.room) })
+
+      io.emit('display rooms', { rooms : getAllActiveRooms() })
+
+    }
+    console.log(`User ${socket.id} disconnected`)
+
   })
 
   // Listen for activity
