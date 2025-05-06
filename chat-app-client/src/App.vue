@@ -2,7 +2,7 @@
 import { io } from "socket.io-client";
 import { ref, onMounted, computed, nextTick } from "vue";
 
-const socket = io("https://chat-app-server-b2vi.onrender.com");
+const socket = io(import.meta.env.BACKEND_URL);
 
 const activityMsg = ref("")
 const message = ref("")
