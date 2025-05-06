@@ -1,5 +1,8 @@
 import express from 'express'
 import { Server } from 'socket.io'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const PORT = process.env.PORT || 4000
 
@@ -11,7 +14,7 @@ const expressServer = app.listen(PORT, () => {
 
 export const io = new Server(expressServer, {
   cors: {
-    origin: process.env.NODE_ENV === 'production' ? false : ['http://localhost:3000', 'http://127.0.0.1:3000']
+    origin: process.env.NODE_ENV === 'production' ? process.env.FRONTEND_URL : ['http://localhost:3000', 'http://127.0.0.1:3000']
   }
 })
 
